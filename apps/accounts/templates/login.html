@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Instagram Login</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="{% static 'accounts/css/styles.css' %}">
+</head>
+<body>
+	<div class="login-page">
+	  <div class="form">
+	    <form class="login-form" method="POST">
+			{% csrf_token %}
+	      <input type="email" placeholder="Email" name="email"/>
+	      <input type="password" placeholder="Password" name="password"/>
+	      <button type="submit">Log in</button>
+	      <p class="message">Not registered? <a href="{% url 'register'%}">Create an account</a></p>
+	    </form>
+	  </div>
+	</div>
+</body>
+</html>
