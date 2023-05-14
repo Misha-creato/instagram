@@ -19,8 +19,8 @@ class Photo(models.Model):
     photo = models.ImageField(
         verbose_name='Photo',
         upload_to='photos',
-        null=True,
-        blank=True
+        null=False,
+        blank=False
     )
     post = models.ForeignKey(
         to=Post,

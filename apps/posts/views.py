@@ -73,7 +73,7 @@ from .forms import PostForm, PhotoForm
 
 class PostCreate(View):
     def get(self, request):
-        post_form = PostForm(user=request.user)
+        post_form = PostForm()
         photo_form = PhotoForm()
         return render(request, 'post_create.html', {'post_form': post_form, 'photo_form': photo_form})
 
