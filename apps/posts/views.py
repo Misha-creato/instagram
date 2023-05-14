@@ -6,12 +6,11 @@ from django.views import View
 from django.views.generic.edit import FormView, UpdateView, CreateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-# Create your views here.
 from .models import Post, Photo, Like, Comment
 from .forms import PostForm, PhotoForm
 from django.views.decorators.csrf import csrf_exempt
 from profiles.models import Profile
-    
+
 
 class PostCreate(View):
     def get(self, request):
@@ -25,11 +24,15 @@ class PostCreate(View):
 
         if post_form.is_valid() and photo_form.is_valid():
             post = post_form.save(commit=False)
-            post.author = request.user
+            post.author = request.user.profile
             post.save()
-            photo = photo_form.save(commit=False)
-            photo.post = post
-            photo.save()
+
+            photos = request.FILES.getlist('photo')
+            for photo in photos:
+                # photo = photo_form.save(commit=False)
+                # photo.post = post
+                # photo.save()
+                Photo.objects.create(post=post, photo=photo)
             return redirect('post_detail', pk=post.pk)
 
         return render(request, 'post_create.html', {'post_form': post_form, 'photo_form': photo_form})
@@ -52,10 +55,8 @@ class PostList(ListView):
         context = super().get_context_data(**kwargs)
         user = self.request.user
         profiles = user.profile.followings.values_list('following_id', flat=True)
-        context['posts'] = self.model.objects.filter(author__in=profiles)
-        # posts = self.model.objects.all()
-        # for post in posts:
-        #     print(post.user.profile)
+        posts = self.model.objects.filter(author__in=profiles)
+        context['posts'] = posts.order_by('-created_at')
         return context
 
 @csrf_exempt

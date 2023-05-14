@@ -11,6 +11,10 @@
         {% csrf_token %}
         {{post_form}}
         {% comment %} <input type="text" name='description'> {% endcomment %}
+        {% comment %} {{photo_form}} {% endcomment %}
+        {% comment %} <input type="file" name='photo' multiple>
+    
+        {% endcomment %}
         {{photo_form}}
         {% comment %} <input type="file" name='photo'> {% endcomment %}
         {% comment %} <button type='submit'>Save</button> {% endcomment %}

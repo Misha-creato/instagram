@@ -2,14 +2,19 @@ import os
 from pathlib import Path
 import sys
 from .conf.third_party import *
+from decouple import (
+    Csv,
+    config
+)
+
+
+SECRET_KEY = config('ENV_SECRET_KEY', cast=str)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
-
-SECRET_KEY = 'django-insecure-x_=e=d(sci6dunob^5l_d+o0-7)sq0+b$u8*n(yolqi+#5u$p5'
-DEBUG = True
-ALLOWED_HOSTS = []
+DEBUG = config('ENV_DEBUG', cast=bool)
+ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
@@ -17,11 +22,11 @@ ROOT_URLCONF = 'settings.urls'
 WSGI_APPLICATION = 'settings.wsgi.application'
 ASGI_APPLICATION = 'settings.asgi.application'
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
-    }
-}
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels.layers.InMemoryChannelLayer"
+#     }
+# }
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -40,7 +45,7 @@ DJANGO_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'debug_toolbar',   
+    'debug_toolbar',
 ]
 
 PROJECT_APPS = [
@@ -61,7 +66,6 @@ DATABASES = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -72,7 +76,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware'
 ]
-
 
 TEMPLATES = [
     {
@@ -105,12 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-LANGUAGE_CODE = 'ru'
+LANGUAGE_CODE = 'en'
 TIME_ZONE = 'Asia/Almaty'
 USE_I18N = True
 USE_TZ = True
-
-
-
-

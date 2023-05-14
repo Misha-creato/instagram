@@ -1,12 +1,14 @@
+import json
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
+from django.views import View
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 from .forms import ProfileForm
 from .models import Profile, FollowerFollowing
 from django.views.decorators.csrf import csrf_exempt
-
+from django.core.serializers.json import DjangoJSONEncoder
 
 class ProfileList(ListView):
     template_name = 'profile.html'
@@ -54,3 +56,17 @@ def profile_follow(request, pk):
             'btn_text': btn_text, 
             'followers_count': followers_count
             })
+
+
+class ProfileSearchView(View):
+    def get(self, request):
+        query = request.GET.get('q')
+        profiles = Profile.objects.filter(username__icontains=query)
+        return render(request, 'profile_search.html', {'profiles': profiles, 'query': query})
+    
+    
+def search_user(request):
+    query = request.GET.get('query')
+    profiles = Profile.objects.filter(username__icontains=query)
+    profiles = list(profiles.values())
+    return JsonResponse({'profiles': profiles})

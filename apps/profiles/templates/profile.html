@@ -99,7 +99,12 @@
                         <div class="gallery-item" tabindex="0">
         
                             <img src="{{post.photos.all.0.photo.url}}" class="gallery-image" alt="">
+                            {% if post.photos.count > 1 %}
+                            <div class="gallery-item-type">
+                                <span class="visually-hidden">Gallery</span><i class="fas fa-clone" aria-hidden="true"></i>
             
+                            </div>
+                            {% endif %}
                             <div class="gallery-item-info">
             
                                 <ul>

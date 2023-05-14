@@ -24,7 +24,7 @@ class Photo(models.Model):
         verbose_name='Photo',
         upload_to='photos',
         null=False,
-        blank=False
+        blank=False,
     )
     post = models.ForeignKey(
         to=Post,
@@ -65,4 +65,6 @@ class Comment(models.Model):
         verbose_name='Created_at',
         auto_now=True
     )
+
+
 

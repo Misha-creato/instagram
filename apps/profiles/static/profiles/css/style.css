@@ -70,6 +70,7 @@ img {
 }
 
 .profile-image img {
+    object-fit: cover;
     border-radius: 50%;
     width: 200px;
     height: 200px;
@@ -93,6 +94,7 @@ img {
 }
 
 .profile-edit-btn {
+    text-decoration: none;
     font-size: 1.4rem;
     line-height: 1.8;
     border: 0.1rem solid #dbdbdb;
@@ -102,6 +104,7 @@ img {
 }
 
 .profile-settings-btn, .profile-add-btn {
+    color: black;
     font-size: 2rem;
     margin-left: 1rem;
 }
@@ -150,6 +153,9 @@ img {
     margin: 1rem;
     color: #fff;
     cursor: pointer;
+}
+.gallery a {
+    display: contents;
 }
 
 .gallery-item:hover .gallery-item-info,
