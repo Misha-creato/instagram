@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 from .forms import ProfileForm
@@ -11,7 +12,8 @@ class ProfileList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["profile"] = Profile.objects.get(user=self.request.user)
+        profile_id = self.kwargs['pk']
+        context["profile"] = Profile.objects.get(id=profile_id)
         return context
     
 
@@ -19,10 +21,15 @@ class ProfileUpdate(UpdateView):
     template_name = 'profile_change.html'
     form_class = ProfileForm
     model = Profile
-    # success_url = ''
+    
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["profile"] = Profile.objects.get(user=self.request.user)
         return context
+    
+    def get_success_url(self) -> str:
+        print(self.request.user)
+        profile_id = Profile.objects.get(user=self.request.user)
+        return reverse('profile', kwargs={'pk': profile_id.pk})
     
