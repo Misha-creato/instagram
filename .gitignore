@@ -1,10 +1,20 @@
+# Python
 __pycache__/
 *.pyc
 *.pyo
 *.env
 *.log
+
+# Django
+staticfiles/
+media/
+
+# Database
 *.sqlite3
 *.sqlite3-journal
 
-staticfiles/
-media/
+# PyCharm
+.idea/*
+
+# MacOS
+.DS_Store

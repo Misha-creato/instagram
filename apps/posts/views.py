@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic.edit import FormView, UpdateView, CreateView
+from django.views.generic.detail import DetailView
 # Create your views here.
 from .models import Post, Photo
 from .forms import PostForm, PhotoForm
@@ -89,6 +90,15 @@ class PostCreate(View):
             photo = photo_form.save(commit=False)
             photo.post = post
             photo.save()
-            return redirect('login')
+            return redirect('post_detail', pk=post.pk)
 
         return render(request, 'post_create.html', {'post_form': post_form, 'photo_form': photo_form})
+    
+class PostDetail(DetailView):
+    template_name = 'post_detail.html'
+    model = Post
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['post'] = kwargs['object']
+        return context
