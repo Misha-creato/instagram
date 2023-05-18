@@ -13,6 +13,10 @@ class Post(models.Model):
         verbose_name='Description',
         blank=False
     )
+    created_at = models.DateTimeField(
+        verbose_name='Created_at',
+        auto_now=True
+    )
     
 
 class Photo(models.Model):
@@ -52,5 +56,13 @@ class Comment(models.Model):
         to=Post,
         on_delete=models.CASCADE,
         related_name='comments'
+    )
+    comment = models.TextField(
+        verbose_name='Comment',
+        max_length=300
+    )
+    created_at = models.DateTimeField(
+        verbose_name='Created_at',
+        auto_now=True
     )
 

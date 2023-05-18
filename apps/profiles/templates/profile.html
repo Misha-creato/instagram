@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{%static 'profiles/css/style.css'%}">
+    <script src='https://code.jquery.com/jquery-3.7.0.min.js'></script>
     <script src="https://kit.fontawesome.com/21a9f74a1b.js" crossorigin="anonymous"></script>
     <title>Document</title>
 </head>
@@ -18,7 +19,7 @@
     
                 <div class="profile-image">
     
-                    <img src="https://images.unsplash.com/photo-1513721032312-6a18a42c8763?w=152&h=152&fit=crop&crop=faces" alt="">
+                    <img src="{{profile.avatar.url}}" alt="">
     
                 </div>
     
@@ -26,20 +27,26 @@
     
                     <h1 class="profile-user-name">{{profile.username}}</h1>
                     {% if profile.user == request.user %}
-                    <a href="{%url 'profile_change' profile.pk %}" class="btn profile-edit-btn">Edit Profile</a>
+                    <a href="{%url 'profile_change' profile.pk %}" class="btn profile-edit-btn">Edit Profile</a>                    
+                    <a href="{%url 'post_create'%}"><button class="btn profile-add-btn" aria-label="profile add"><i class="fas fa-square-plus" aria-hidden="true"></i></button></a>
+                    <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button>
+                    {% else %}
+                        <button class="btn profile-edit-btn" onclick='followBtnClick(this)'>
+                            {% if request.user.profile.id in followers %}Unfollow
+                            {% else %}
+                            Follow
+                            {% endif %}
+                        </button>
                     {% endif %}
                     
-                    <button class="btn profile-add-btn" aria-label="profile add"><i class="fas fa-square-plus" aria-hidden="true"></i></button>
-                    <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button>
-    
                 </div>
     
                 <div class="profile-stats">
     
                     <ul>
-                        <li><span class="profile-stat-count">164</span> posts</li>
-                        <li><span class="profile-stat-count">188</span> followers</li>
-                        <li><span class="profile-stat-count">206</span> following</li>
+                        <li><span class="profile-stat-count">{{profile.user.posts.count}}</span> posts</li>
+                        <li><span class="profile-stat-count">{{profile.followers.count}}</span> followers</li>
+                        <li><span class="profile-stat-count">{{profile.followings.count}}</span> following</li>
                     </ul>
     
                 </div>
@@ -66,7 +73,7 @@
     
     
     
-                <div class="gallery-item" tabindex="0">
+                {% comment %} <div class="gallery-item" tabindex="0">
     
                     <img src="https://images.unsplash.com/photo-1504214208698-ea1916a2195a?w=500&h=500&fit=crop" class="gallery-image" alt="">
     
@@ -85,23 +92,28 @@
     
                     </div>
     
-                </div>
-    
-                <div class="gallery-item" tabindex="0">
-    
-                    <img src="https://images.unsplash.com/photo-1515814472071-4d632dbc5d4a?w=500&h=500&fit=crop" class="gallery-image" alt="">
-    
-                    <div class="gallery-item-info">
-    
-                        <ul>
-                            <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i class="fas fa-heart" aria-hidden="true"></i> 66</li>
-                            <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i class="fas fa-comment" aria-hidden="true"></i> 2</li>
-                        </ul>
-    
-                    </div>
-    
-                </div>
-    
+                </div> {% endcomment %}
+                {% comment %} {% if profile.user.posts.count > 0 %} {% endcomment %}
+                    {% for post in profile.user.posts.all %}
+                    <a href="{%url 'post_detail' post.pk%}">
+                        <div class="gallery-item" tabindex="0">
+        
+                            <img src="{{post.photos.all.0.photo.url}}" class="gallery-image" alt="">
+            
+                            <div class="gallery-item-info">
+            
+                                <ul>
+                                    <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i class="fas fa-heart" aria-hidden="true"></i> {{post.likes.count}}</li>
+                                    <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i class="fas fa-comment" aria-hidden="true"></i> {{post.comments.count}}</li>
+                                </ul>
+            
+                            </div>
+        
+                        </div>
+                    </a>
+                    {% endfor %} 
+                {% comment %} {% endif %} {% endcomment %}
+                
     
     
                 
@@ -117,5 +129,20 @@
         <!-- End of container -->
     
     </main>
+    <script>
+        function followBtnClick(btn){
+            let following_profile = '{{ profile.id }}'
+            console.log(following_profile)
+            
+            $.ajax 
+            ({
+                url: `http://127.0.0.1:8000/profile/follow/${following_profile}/`,
+                type: 'POST',
+                success: function(result){
+                    console.log(result)
+                },
+            })
+        }
+    </script>
 </body>
 </html>

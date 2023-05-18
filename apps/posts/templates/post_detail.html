@@ -7,10 +7,11 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="" method='POST' enctype="multipart/form-data">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type='submit'>Update</button>
-    </form>
+    <p>
+        {{post.description}}
+    </p>
+    {% for photo in post.photos.all %}
+    <img src="{{photo.photo.url}}" alt="" class='post_photo'>
+    {% endfor %}
 </body>
 </html>
