@@ -1,0 +1,197 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'posts/css/style.css' %}">
+    <script src='https://code.jquery.com/jquery-3.7.0.min.js'></script>
+    <script src="https://kit.fontawesome.com/21a9f74a1b.js" crossorigin="anonymous"></script>
+    <script src="{%static 'posts/js/like.js' %}"></script>
+    <script src="{%static 'posts/js/comment.js' %}"></script>
+    <title>Document</title>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-wrapper">
+            <img src="{%static 'posts/images/instagram_logo.png'}" class="brand-img" alt="">
+            <input type="text" class="search-box" placeholder="search">
+            <div class="nav-items">
+                <a href="{% url 'profile' user.profile.pk %}"><i class="icon fas fa-house"></i></a>
+                <i class="icon fas fa-paper-plane"></i>
+                <a href="{% url 'post_create' %}"><i class="icon fas fa-square-plus"></i></a>
+                <i class="icon fas fa-compass"></i>
+                <i class="icon fas fa-heart"></i>
+                <div class="icon user-profile"></div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="main">
+        <div class="wrapper">
+            <div class="left-col">
+                <div class="status-wrapper">
+                    <div class="status-card">
+                        <div class="profile-pic"><img src="" alt=""></div>
+                        <p class="username">user_name_1</p>
+                    </div>
+                    <div class="status-card">
+                        <div class="profile-pic"><img src="" alt=""></div>
+                        <p class="username">user_name_2</p>
+                    </div>
+                    <div class="status-card">
+                        <div class="profile-pic"><img src="" alt=""></div>
+                        <p class="username">user_name_3</p>
+                    </div>
+                    // +5 more status card elements.
+            </div>
+        </div>
+    </section>
+
+    <section class="main">
+        <div class="wrapper">
+            <div class="left-col">
+                
+
+                {% for post in posts%}
+                <div class="post" id="{{post.pk}}">
+                    <div class="info">
+                        <div class="user">
+                            <div class="profile-pic"><img src="{{post.author.profile.avatar.url}}" alt=""></div>
+                            <p class="username">{{post.author.profile.username}}</p>
+                        </div>
+                        <i class="options fas fa-ellipsis" ></i>
+                    </div>
+                    {% for photo in post.photos.all %}
+                    <img src="{{photo.photo.url}}" class="post-image" alt="">
+                    {% endfor %}
+                    <div class="post-content">
+                        <div class="reaction-wrapper">
+                            
+                            {% if post.likes.all %}
+                                {% for like in post.likes.all %}
+                                <i class="icon {% if request.user.id == like.user_id %} fa-solid {% else %} fa-regular {% endif %} fa-heart post-like"></i>
+                                {% endfor %}
+                            {% else %}
+                                <i class="icon fa-regular fa-heart post-like"></i>
+                            {% endif %}
+                            <i class="icon fa-regular fa-comment"></i>
+                            <i class="icon fa-regular fa-paper-plane"></i>
+                        </div>
+                        <p class="likes" id="likes-count-{{post.pk}}">{{post.likes.count}} likes</p>
+                        <p class="description"><span>{{post.author.profile.username}} </span>{{post.description}}</p>
+                        <p class="post-time">{{post.created_at}}</p>
+                    </div>
+                    <div class="comment-wrapper">
+                        <i class="icon fa-regular fa-face-smile"></i>
+                        <input type="text" class="comment-box" placeholder="Add a comment" oninput="checkInput()">
+                        <button type='submit' onclick='commentBtnClick(this)' class="comment-btn">post</button>
+                    </div>
+                </div>
+                {% endfor %}
+                
+            </div>
+        </div>
+    </section>
+
+    <section class="main">
+        <div class="wrapper"> 
+            // left col element
+            <div class="right-col">
+                <div class="profile-card">
+                    <div class="profile-pic">
+                        <img src="" alt="">
+                    </div>
+                    <div>
+                        <p class="username">modern_web_channel</p>
+                        <p class="sub-text">kunaal kumar</p>
+                    </div>
+                    <button class="action-btn">switch</button>
+                </div>
+                <p class="suggestion-text">Suggestions for you</p>
+                <div class="profile-card">
+                    <div class="profile-pic">
+                        <img src="" alt="">
+                    </div>
+                    <div>
+                        <p class="username">modern_web_channel</p>
+                        <p class="sub-text">followed bu user</p>
+                    </div>
+                    <button class="action-btn">follow</button>
+                </div>
+                <div class="profile-card">
+                    <div class="profile-pic">
+                        <img src="" alt="">
+                    </div>
+                    <div>
+                        <p class="username">modern_web_channel</p>
+                        <p class="sub-text">followed bu user</p>
+                    </div>
+                    <button class="action-btn">follow</button>
+                </div>
+                <div class="profile-card">
+                    <div class="profile-pic">
+                        <img src="" alt="">
+                    </div>
+                    <div>
+                        <p class="username">modern_web_channel</p>
+                        <p class="sub-text">followed bu user</p>
+                    </div>
+                    <button class="action-btn">follow</button>
+                </div>
+                <div class="profile-card">
+                    <div class="profile-pic">
+                        <img src="" alt="">
+                    </div>
+                    <div>
+                        <p class="username">modern_web_channel</p>
+                        <p class="sub-text">followed bu user</p>
+                    </div>
+                    <button class="action-btn">follow</button>
+                </div>
+                <div class="profile-card">
+                    <div class="profile-pic">
+                        <img src="" alt="">
+                    </div>
+                    <div>
+                        <p class="username">modern_web_channel</p>
+                        <p class="sub-text">followed bu user</p>
+                    </div>
+                    <button class="action-btn">follow</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+            function checkInput(){
+                let commentField = $(".comment-box")
+                let commentButton = $(".comment-btn")
+                let commentValue = commentField.value
+                console.log(commentField)
+                console.log(commentButton)
+                console.log(commentValue)
+                if (commentValue !== ''){
+                    commentButton.disabled = false;
+                }
+                else {
+                    commentButton.disabled = true;
+                }
+            }
+            function commentBtnClick(btn){
+                let post = $(btn).closest('.post');
+                let post_id = post[0].id
+                let comment = post.find('.comment-box')[0].value
+                $.ajax
+                ({
+                    url: `post_comment/${post_id}/`,
+                    type: 'POST',
+                    data: {'comment': comment},
+                    success: function(result){
+                        console.log(result)
+                    },
+                })
+            }
+    </script>
+</body>
+</html>

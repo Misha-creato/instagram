@@ -1,76 +1,17 @@
 from typing import Any, Dict
 from django.forms.models import BaseModelForm
-from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views import View
 from django.views.generic.edit import FormView, UpdateView, CreateView
 from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
 # Create your views here.
-from .models import Post, Photo
+from .models import Post, Photo, Like, Comment
 from .forms import PostForm, PhotoForm
+from django.views.decorators.csrf import csrf_exempt
 
-# class PostCreate(CreateView):
-#     template_name = 'post_create.html'
-#     model = Post
-#     form_class1 = PostForm
-#     form_class2 = PhotoForm
-#     success_url = '/login/'
-#     fields = '__all__'
-
-#     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
-#         context = super().get_context_data(**kwargs)
-#         context['form1'] = self.get_form(self.form_class1)
-#         context['form2'] = self.get_form(self.form_class2)
-#         return context
     
-#     def form_valid(self, form: BaseModelForm) -> HttpResponse:
-#         form1 = self.get_form(self.form_class1)
-#         print(form1.cleaned_data)
-#         if form1.is_valid():
-#             return self.form1_valid(form1)
-        
-#         form2 = self.get_form(self.form_class2)
-#         if form2.is_valid():
-#             return self.form2_valid(form2)
-        
-#     # def form_valid(self, form):
-#     #     print(form.errors)
-#     #     if form.is_valid():
-#     #         return self.form_valid_custom(form)
-
-#     # def form_valid_custom(self, form):
-#     #     print('hello')
-#     #     form1 = self.get_form(self.form_class1)
-#     #     if form1.is_valid():
-#     #         return self.form1_valid(form1)
-
-#     #     form2 = self.get_form(self.form_class2)
-#     #     if form2.is_valid():
-#     #         return self.form2_valid(form2)
-
-#     #     return super().form_valid(form)
-      
-#     def form1_valid(self, form):
-#         print('hiii')
-#         return super().form_valid(form)
-    
-#     def form2_valid(self, form):
-#         return super().form_valid(form)
-    
-#     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
-#         print(form.errors)
-#         return super().form_invalid(form)
-
-#     def get_form(self, form_class=None):
-#         if form_class == self.form_class1:
-#             form = form_class(user=self.request.user)
-#         # elif form_class == self.form_class2:
-#         #     form = form_class()
-#             # Additional arguments for form2 if needed
-#         else:
-#             form = super().get_form(form_class)
-#         return form
-
 
 class PostCreate(View):
     def get(self, request):
@@ -94,6 +35,7 @@ class PostCreate(View):
 
         return render(request, 'post_create.html', {'post_form': post_form, 'photo_form': photo_form})
     
+
 class PostDetail(DetailView):
     template_name = 'post_detail.html'
     model = Post
@@ -102,3 +44,36 @@ class PostDetail(DetailView):
         context = super().get_context_data(**kwargs)
         context['post'] = kwargs['object']
         return context
+
+class PostList(ListView):
+    template_name = 'index.html'
+    model = Post
+    
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['posts'] = self.model.objects.all()
+        # context['likes'] = Like.objects.values['user_id']
+        return context
+
+@csrf_exempt
+def post_likes(request, pk):
+    if request.method == 'POST':
+        post = get_object_or_404(Post, pk=pk)
+        user = request.user
+        like = Like.objects.filter(post=post, user=user)
+        if like:
+            like.delete()
+        else:
+            Like.objects.create(user=user, post=post)
+        likes_count = post.likes.count()
+        return JsonResponse({'likes_count': likes_count})
+
+@csrf_exempt
+def post_comment(request, pk):
+    if request.method == 'POST':
+        post = get_object_or_404(Post, pk=pk)
+        user = request.user
+        comment = request.POST.get('comment')
+        print(post, user, comment)
+        Comment.objects.create(user=user, post=post, comment=comment)
+        return HttpResponse('success')
