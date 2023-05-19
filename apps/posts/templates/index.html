@@ -54,13 +54,15 @@
             <div class="left-col">
                 
 
-                {% for post in posts%}
+                {% for post in posts %}
                 <div class="post" id="{{post.pk}}">
                     <div class="info">
-                        <div class="user">
-                            <div class="profile-pic"><img src="{{post.author.profile.avatar.url}}" alt=""></div>
-                            <p class="username">{{post.author.profile.username}}</p>
-                        </div>
+                        <a href="{% url 'profile' post.author.id %}" class='profile-link'>
+                            <div class="user">
+                                <div class="profile-pic"><img src="{{post.author.avatar.url}}" alt=""></div>
+                                <p class="username">{{post.author.username}}</p>
+                            </div>
+                        </a>
                         <i class="options fas fa-ellipsis" ></i>
                     </div>
                     {% for photo in post.photos.all %}
@@ -80,12 +82,12 @@
                             <i class="icon fa-regular fa-paper-plane"></i>
                         </div>
                         <p class="likes" id="likes-count-{{post.pk}}">{{post.likes.count}} likes</p>
-                        <p class="description"><span>{{post.author.profile.username}} </span>{{post.description}}</p>
+                        <p class="description"><span>{{post.author.username}} </span>{{post.description}}</p>
                         <p class="post-time">{{post.created_at}}</p>
                     </div>
                     <div class="comment-wrapper">
                         <i class="icon fa-regular fa-face-smile"></i>
-                        <input type="text" class="comment-box" placeholder="Add a comment" oninput="checkInput()">
+                        <input type="text" class="comment-box" placeholder="Add a comment" oninput="checkInput(this)">
                         <button type='submit' onclick='commentBtnClick(this)' class="comment-btn">post</button>
                     </div>
                 </div>
@@ -95,7 +97,7 @@
         </div>
     </section>
 
-    <section class="main">
+    {% comment %} <section class="main">
         <div class="wrapper"> 
             // left col element
             <div class="right-col">
@@ -162,21 +164,22 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> {% endcomment %}
     <script>
-            function checkInput(){
-                let commentField = $(".comment-box")
-                let commentButton = $(".comment-btn")
-                let commentValue = commentField.value
-                console.log(commentField)
+            function checkInput(input){
+                let commentField = $(input)[0]
+                let commentButton = $(input).closest(".comment-wrapper").find(".comment-btn");
+                let commentValue = commentField.value.trim()
                 console.log(commentButton)
-                console.log(commentValue)
                 if (commentValue !== ''){
-                    commentButton.disabled = false;
+                    commentButton.prop('disabled', false);
+                    commentButton.css('opacity', '1')
                 }
                 else {
-                    commentButton.disabled = true;
+                    commentButton.prop('disabled', true);
+                    commentButton.css('opacity', '0.5')
                 }
+                console.log(commentButton)
             }
             function commentBtnClick(btn){
                 let post = $(btn).closest('.post');

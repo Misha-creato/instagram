@@ -31,7 +31,7 @@
                     <a href="{%url 'post_create'%}"><button class="btn profile-add-btn" aria-label="profile add"><i class="fas fa-square-plus" aria-hidden="true"></i></button></a>
                     <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button>
                     {% else %}
-                        <button class="btn profile-edit-btn" onclick='followBtnClick(this)'>
+                        <button id='follow-btn' class="btn profile-edit-btn" onclick='followBtnClick(this)'>
                             {% if request.user.profile.id in followers %}Unfollow
                             {% else %}
                             Follow
@@ -44,8 +44,8 @@
                 <div class="profile-stats">
     
                     <ul>
-                        <li><span class="profile-stat-count">{{profile.user.posts.count}}</span> posts</li>
-                        <li><span class="profile-stat-count">{{profile.followers.count}}</span> followers</li>
+                        <li><span class="profile-stat-count">{{profile.posts.count}}</span> posts</li>
+                        <li><span id='followers-count' class="profile-stat-count">{{profile.followers.count}}</span> followers</li>
                         <li><span class="profile-stat-count">{{profile.followings.count}}</span> following</li>
                     </ul>
     
@@ -94,7 +94,7 @@
     
                 </div> {% endcomment %}
                 {% comment %} {% if profile.user.posts.count > 0 %} {% endcomment %}
-                    {% for post in profile.user.posts.all %}
+                    {% for post in profile.posts.all %}
                     <a href="{%url 'post_detail' post.pk%}">
                         <div class="gallery-item" tabindex="0">
         
@@ -132,14 +132,16 @@
     <script>
         function followBtnClick(btn){
             let following_profile = '{{ profile.id }}'
-            console.log(following_profile)
             
             $.ajax 
             ({
                 url: `http://127.0.0.1:8000/profile/follow/${following_profile}/`,
                 type: 'POST',
                 success: function(result){
-                    console.log(result)
+                    let followBtnText = result['btn_text']
+                    let followersCount = result['followers_count']
+                    $("#follow-btn").text(followBtnText)
+                    $("#followers-count").text(followersCount)
                 },
             })
         }
