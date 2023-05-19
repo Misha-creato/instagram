@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
 from django.views.generic.edit import UpdateView
@@ -34,17 +34,23 @@ class ProfileUpdate(UpdateView):
         return context
     
     def get_success_url(self) -> str:
-        print(self.request.user)
         profile_id = Profile.objects.get(user=self.request.user)
         return reverse('profile', kwargs={'pk': profile_id.pk})
     
 @csrf_exempt
 def profile_follow(request, pk):
-    following_profile = get_object_or_404(Profile, pk=pk)
-    follower_profile = request.user.profile
-    follower_following = FollowerFollowing.objects.filter(following=following_profile, follower=follower_profile)
-    if follower_following:
-        follower_following.delete()
-    else:
-        FollowerFollowing.objects.create(following=following_profile, follower=follower_profile)
-    return HttpResponse('success')
+    if request.method == 'POST':
+        following_profile = get_object_or_404(Profile, pk=pk)
+        follower_profile = request.user.profile
+        follower_following = FollowerFollowing.objects.filter(following=following_profile, follower=follower_profile)
+        btn_text = 'Follow' 
+        if follower_following:
+            follower_following.delete()
+        else:
+            FollowerFollowing.objects.create(following=following_profile, follower=follower_profile)
+            btn_text = 'Unfollow'
+        followers_count = following_profile.followers.count()
+        return JsonResponse({
+            'btn_text': btn_text, 
+            'followers_count': followers_count
+            })

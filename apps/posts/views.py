@@ -10,7 +10,7 @@ from django.views.generic.list import ListView
 from .models import Post, Photo, Like, Comment
 from .forms import PostForm, PhotoForm
 from django.views.decorators.csrf import csrf_exempt
-
+from profiles.models import Profile
     
 
 class PostCreate(View):
@@ -24,7 +24,6 @@ class PostCreate(View):
         photo_form = PhotoForm(request.POST, request.FILES)
 
         if post_form.is_valid() and photo_form.is_valid():
-            print('hfhfhhf')
             post = post_form.save(commit=False)
             post.author = request.user
             post.save()
@@ -51,8 +50,12 @@ class PostList(ListView):
     
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['posts'] = self.model.objects.all()
-        # context['likes'] = Like.objects.values['user_id']
+        user = self.request.user
+        profiles = user.profile.followings.values_list('following_id', flat=True)
+        context['posts'] = self.model.objects.filter(author__in=profiles)
+        # posts = self.model.objects.all()
+        # for post in posts:
+        #     print(post.user.profile)
         return context
 
 @csrf_exempt
@@ -74,6 +77,5 @@ def post_comment(request, pk):
         post = get_object_or_404(Post, pk=pk)
         user = request.user
         comment = request.POST.get('comment')
-        print(post, user, comment)
         Comment.objects.create(user=user, post=post, comment=comment)
         return HttpResponse('success')

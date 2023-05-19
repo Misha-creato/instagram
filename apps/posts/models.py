@@ -1,11 +1,11 @@
 from django.db import models
 from settings.base import AUTH_USER_MODEL as UserModel
-# from profiles.models import Profile
+from profiles.models import Profile
 
 
 class Post(models.Model):
     author = models.ForeignKey(
-        to=UserModel,
+        to=Profile,
         on_delete=models.CASCADE,
         related_name='posts'
     )
