@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Search Results</h2>
+
+{% if query %}
+  <p>Search query: {{ query }}</p>
+{% endif %}
+
+{% if profiles %}
+  <ul>
+    {% for profile in profiles %}
+      <li>{{ profile.username }}</li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No profiles found.</p>
+{% endif %}
+
+</body>
+</html>

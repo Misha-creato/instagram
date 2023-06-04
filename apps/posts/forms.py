@@ -1,6 +1,10 @@
 from django import forms
 from .models import Post, Photo, Comment
+<<<<<<< HEAD
 from django.forms import ClearableFileInput
+=======
+
+>>>>>>> 921a3ee (Created like, comment and follows functionality)
 
 class PostForm(forms.ModelForm):
     # def __init__(self, *args, **kwargs):
@@ -25,9 +29,12 @@ class PhotoForm(forms.ModelForm):
         fields = [
             'photo',
         ]
+<<<<<<< HEAD
         widgets = {
             'photo': ClearableFileInput(attrs={'multiple': True})  # Поддержка множественного выбора файлов
         }
+=======
+>>>>>>> 921a3ee (Created like, comment and follows functionality)
 
 
 # class CommentForm(forms.ModelForm):

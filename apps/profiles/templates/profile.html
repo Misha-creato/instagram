@@ -31,7 +31,11 @@
                     <a href="{%url 'post_create'%}"><button class="btn profile-add-btn" aria-label="profile add"><i class="fas fa-square-plus" aria-hidden="true"></i></button></a>
                     <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button>
                     {% else %}
+<<<<<<< HEAD
                         <button id='follow-btn' class="btn profile-edit-btn" onclick='followBtnClick(this)'>
+=======
+                        <button class="btn profile-edit-btn" onclick='followBtnClick(this)'>
+>>>>>>> 921a3ee (Created like, comment and follows functionality)
                             {% if request.user.profile.id in followers %}Unfollow
                             {% else %}
                             Follow
@@ -44,8 +48,13 @@
                 <div class="profile-stats">
     
                     <ul>
+<<<<<<< HEAD
                         <li><span class="profile-stat-count">{{profile.posts.count}}</span> posts</li>
                         <li><span id='followers-count' class="profile-stat-count">{{profile.followers.count}}</span> followers</li>
+=======
+                        <li><span class="profile-stat-count">{{profile.user.posts.count}}</span> posts</li>
+                        <li><span class="profile-stat-count">{{profile.followers.count}}</span> followers</li>
+>>>>>>> 921a3ee (Created like, comment and follows functionality)
                         <li><span class="profile-stat-count">{{profile.followings.count}}</span> following</li>
                     </ul>
     
@@ -94,17 +103,25 @@
     
                 </div> {% endcomment %}
                 {% comment %} {% if profile.user.posts.count > 0 %} {% endcomment %}
+<<<<<<< HEAD
                     {% for post in profile.posts.all %}
+=======
+                    {% for post in profile.user.posts.all %}
+>>>>>>> 921a3ee (Created like, comment and follows functionality)
                     <a href="{%url 'post_detail' post.pk%}">
                         <div class="gallery-item" tabindex="0">
         
                             <img src="{{post.photos.all.0.photo.url}}" class="gallery-image" alt="">
+<<<<<<< HEAD
                             {% if post.photos.count > 1 %}
                             <div class="gallery-item-type">
                                 <span class="visually-hidden">Gallery</span><i class="fas fa-clone" aria-hidden="true"></i>
             
                             </div>
                             {% endif %}
+=======
+            
+>>>>>>> 921a3ee (Created like, comment and follows functionality)
                             <div class="gallery-item-info">
             
                                 <ul>
@@ -137,16 +154,24 @@
     <script>
         function followBtnClick(btn){
             let following_profile = '{{ profile.id }}'
+<<<<<<< HEAD
+=======
+            console.log(following_profile)
+>>>>>>> 921a3ee (Created like, comment and follows functionality)
             
             $.ajax 
             ({
                 url: `http://127.0.0.1:8000/profile/follow/${following_profile}/`,
                 type: 'POST',
                 success: function(result){
+<<<<<<< HEAD
                     let followBtnText = result['btn_text']
                     let followersCount = result['followers_count']
                     $("#follow-btn").text(followBtnText)
                     $("#followers-count").text(followersCount)
+=======
+                    console.log(result)
+>>>>>>> 921a3ee (Created like, comment and follows functionality)
                 },
             })
         }

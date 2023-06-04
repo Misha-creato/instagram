@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 import json
 from django.http import HttpResponse, JsonResponse
+=======
+from django.http import HttpResponse
+>>>>>>> 921a3ee (Created like, comment and follows functionality)
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
 from django.views import View
@@ -8,7 +12,11 @@ from django.views.generic.list import ListView
 from .forms import ProfileForm
 from .models import Profile, FollowerFollowing
 from django.views.decorators.csrf import csrf_exempt
+<<<<<<< HEAD
 from django.core.serializers.json import DjangoJSONEncoder
+=======
+
+>>>>>>> 921a3ee (Created like, comment and follows functionality)
 
 class ProfileList(ListView):
     template_name = 'profile.html'
@@ -41,6 +49,7 @@ class ProfileUpdate(UpdateView):
     
 @csrf_exempt
 def profile_follow(request, pk):
+<<<<<<< HEAD
     if request.method == 'POST':
         following_profile = get_object_or_404(Profile, pk=pk)
         follower_profile = request.user.profile
@@ -70,3 +79,13 @@ def search_user(request):
     profiles = Profile.objects.filter(username__icontains=query)
     profiles = list(profiles.values())
     return JsonResponse({'profiles': profiles})
+=======
+    following_profile = get_object_or_404(Profile, pk=pk)
+    follower_profile = request.user.profile
+    follower_following = FollowerFollowing.objects.filter(following=following_profile, follower=follower_profile)
+    if follower_following:
+        follower_following.delete()
+    else:
+        FollowerFollowing.objects.create(following=following_profile, follower=follower_profile)
+    return HttpResponse('success')
+>>>>>>> 921a3ee (Created like, comment and follows functionality)
