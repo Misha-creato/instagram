@@ -1,4 +1,7 @@
+# Django
 from django.db import models
+
+# First party
 from accounts.models import CustomUser
 
 
@@ -10,7 +13,7 @@ class Profile(models.Model):
     avatar = models.ImageField(
         verbose_name='Avatar',
         upload_to='avatars',
-        blank = True,
+        blank=True,
         null=True
     )
     username = models.CharField(

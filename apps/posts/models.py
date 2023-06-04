@@ -65,9 +65,3 @@ class Comment(models.Model):
         verbose_name='Created_at',
         auto_now=True
     )
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 921a3ee (Created like, comment and follows functionality)
-

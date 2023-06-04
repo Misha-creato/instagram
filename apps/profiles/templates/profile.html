@@ -1,180 +1,188 @@
 {%load static%}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{%static 'profiles/css/style.css'%}">
-    <script src='https://code.jquery.com/jquery-3.7.0.min.js'></script>
-    <script src="https://kit.fontawesome.com/21a9f74a1b.js" crossorigin="anonymous"></script>
-    <title>Document</title>
-</head>
-<body>
-    <header>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="{%static 'profiles/css/style.css'%}" />
+        <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+        <script
+            src="https://kit.fontawesome.com/21a9f74a1b.js"
+            crossorigin="anonymous"
+        ></script>
+        <title>Document</title>
+    </head>
+    <body>
+        <header>
+            <div class="container">
+                <div class="profile">
+                    <div class="profile-image">
+                        {% if profile.avatar %}
+                        <img src="{{ profile.avatar.url }}" alt="" />
+                        {% else %}
+                        <img src="default_avatar.png" alt="Default Avatar" />
+                        {% endif %}
+                    </div>
 
-        <div class="container">
-    
-            <div class="profile">
-    
-                <div class="profile-image">
-    
-                    <img src="{{profile.avatar.url}}" alt="">
-    
-                </div>
-    
-                <div class="profile-user-settings">
-    
-                    <h1 class="profile-user-name">{{profile.username}}</h1>
-                    {% if profile.user == request.user %}
-                    <a href="{%url 'profile_change' profile.pk %}" class="btn profile-edit-btn">Edit Profile</a>                    
-                    <a href="{%url 'post_create'%}"><button class="btn profile-add-btn" aria-label="profile add"><i class="fas fa-square-plus" aria-hidden="true"></i></button></a>
-                    <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button>
-                    {% else %}
-<<<<<<< HEAD
-                        <button id='follow-btn' class="btn profile-edit-btn" onclick='followBtnClick(this)'>
-=======
-                        <button class="btn profile-edit-btn" onclick='followBtnClick(this)'>
->>>>>>> 921a3ee (Created like, comment and follows functionality)
-                            {% if request.user.profile.id in followers %}Unfollow
-                            {% else %}
-                            Follow
-                            {% endif %}
+                    <div class="profile-user-settings">
+                        <h1 class="profile-user-name">{{profile.username}}</h1>
+                        {% if profile.user == request.user %}
+                        <a
+                            href="{%url 'profile_change' profile.pk %}"
+                            class="btn profile-edit-btn"
+                            >Edit Profile</a
+                        >
+                        <a href="{%url 'post_create'%}"
+                            ><button class="btn profile-add-btn" aria-label="profile add">
+                                <i
+                                    class="fas fa-square-plus"
+                                    aria-hidden="true"
+                                ></i></button
+                        ></a>
+                        <button
+                            class="btn profile-settings-btn"
+                            aria-label="profile settings"
+                        >
+                            <i class="fas fa-cog" aria-hidden="true"></i>
                         </button>
-                    {% endif %}
-                    
-                </div>
-    
-                <div class="profile-stats">
-    
-                    <ul>
-<<<<<<< HEAD
-                        <li><span class="profile-stat-count">{{profile.posts.count}}</span> posts</li>
-                        <li><span id='followers-count' class="profile-stat-count">{{profile.followers.count}}</span> followers</li>
-=======
-                        <li><span class="profile-stat-count">{{profile.user.posts.count}}</span> posts</li>
-                        <li><span class="profile-stat-count">{{profile.followers.count}}</span> followers</li>
->>>>>>> 921a3ee (Created like, comment and follows functionality)
-                        <li><span class="profile-stat-count">{{profile.followings.count}}</span> following</li>
-                    </ul>
-    
-                </div>
-    
-                <div class="profile-bio">
-    
-                    <p><span class="profile-real-name">{{profile.name}}</span> {{profile.bio}}</p>
-    
-                </div>
-    
-            </div>
-            <!-- End of profile section -->
-    
-        </div>
-        <!-- End of container -->
-    
-    </header>
-    
-    <main>
-    
-        <div class="container">
-    
-            <div class="gallery">
-    
-    
-    
-                {% comment %} <div class="gallery-item" tabindex="0">
-    
-                    <img src="https://images.unsplash.com/photo-1504214208698-ea1916a2195a?w=500&h=500&fit=crop" class="gallery-image" alt="">
-    
-                    <div class="gallery-item-type">
-    
-                        <span class="visually-hidden">Gallery</span><i class="fas fa-clone" aria-hidden="true"></i>
-    
+                        {% else %}
+                        <button
+                            id="follow-btn"
+                            class="btn profile-edit-btn"
+                            onclick="followBtnClick(this)"
+                        >
+                            {% if request.user.profile.id in followers %}Unfollow {% else
+                            %} Follow {% endif %}
+                        </button>
+                        {% endif %}
                     </div>
-    
-                    <div class="gallery-item-info">
-    
+
+                    <div class="profile-stats">
                         <ul>
-                            <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i class="fas fa-heart" aria-hidden="true"></i> 52</li>
-                            <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i class="fas fa-comment" aria-hidden="true"></i> 4</li>
+                            <li>
+                                <span class="profile-stat-count"
+                                    >{{profile.posts.count}}</span
+                                >
+                                posts
+                            </li>
+                            <li>
+                                <span id="followers-count" class="profile-stat-count"
+                                    >{{profile.followers.count}}</span
+                                >
+                                followers
+                            </li>
+                            <li>
+                                <span class="profile-stat-count"
+                                    >{{profile.followers.count}}</span
+                                >
+                                followers
+                            </li>
+                            <li>
+                                <span class="profile-stat-count"
+                                    >{{profile.followings.count}}</span
+                                >
+                                following
+                            </li>
                         </ul>
-    
                     </div>
-    
-                </div> {% endcomment %}
-                {% comment %} {% if profile.user.posts.count > 0 %} {% endcomment %}
-<<<<<<< HEAD
-                    {% for post in profile.posts.all %}
-=======
-                    {% for post in profile.user.posts.all %}
->>>>>>> 921a3ee (Created like, comment and follows functionality)
+
+                    <div class="profile-bio">
+                        <p>
+                            <span class="profile-real-name">{{profile.name}}</span>
+                            {{profile.bio}}
+                        </p>
+                    </div>
+                </div>
+                <!-- End of profile section -->
+            </div>
+            <!-- End of container -->
+        </header>
+
+        <main>
+            <div class="container">
+                <div class="gallery">
+                    {% comment %}
+                    <div class="gallery-item" tabindex="0">
+                        <img
+                            src="https://images.unsplash.com/photo-1504214208698-ea1916a2195a?w=500&h=500&fit=crop"
+                            class="gallery-image"
+                            alt=""
+                        />
+
+                        <div class="gallery-item-type">
+                            <span class="visually-hidden">Gallery</span
+                            ><i class="fas fa-clone" aria-hidden="true"></i>
+                        </div>
+
+                        <div class="gallery-item-info">
+                            <ul>
+                                <li class="gallery-item-likes">
+                                    <span class="visually-hidden">Likes:</span
+                                    ><i class="fas fa-heart" aria-hidden="true"></i> 52
+                                </li>
+                                <li class="gallery-item-comments">
+                                    <span class="visually-hidden">Comments:</span
+                                    ><i class="fas fa-comment" aria-hidden="true"></i> 4
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    {% endcomment %} {% comment %} {% if profile.user.posts.count > 0 %}
+                    {% endcomment %} {% for post in profile.posts.all %}
                     <a href="{%url 'post_detail' post.pk%}">
                         <div class="gallery-item" tabindex="0">
-        
-                            <img src="{{post.photos.all.0.photo.url}}" class="gallery-image" alt="">
-<<<<<<< HEAD
+                            <img
+                                src="{{post.photos.all.0.photo.url}}"
+                                class="gallery-image"
+                                alt=""
+                            />
                             {% if post.photos.count > 1 %}
                             <div class="gallery-item-type">
-                                <span class="visually-hidden">Gallery</span><i class="fas fa-clone" aria-hidden="true"></i>
-            
+                                <span class="visually-hidden">Gallery</span
+                                ><i class="fas fa-clone" aria-hidden="true"></i>
                             </div>
                             {% endif %}
-=======
-            
->>>>>>> 921a3ee (Created like, comment and follows functionality)
                             <div class="gallery-item-info">
-            
                                 <ul>
-                                    <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i class="fas fa-heart" aria-hidden="true"></i> {{post.likes.count}}</li>
-                                    <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i class="fas fa-comment" aria-hidden="true"></i> {{post.comments.count}}</li>
+                                    <li class="gallery-item-likes">
+                                        <span class="visually-hidden">Likes:</span
+                                        ><i class="fas fa-heart" aria-hidden="true"></i>
+                                        {{post.likes.count}}
+                                    </li>
+                                    <li class="gallery-item-comments">
+                                        <span class="visually-hidden">Comments:</span
+                                        ><i class="fas fa-comment" aria-hidden="true"></i>
+                                        {{post.comments.count}}
+                                    </li>
                                 </ul>
-            
                             </div>
-        
                         </div>
                     </a>
-                    {% endfor %} 
-                {% comment %} {% endif %} {% endcomment %}
-                
-    
-    
-                
-    
-                
-    
+                    {% endfor %} {% comment %} {% endif %} {% endcomment %}
+                </div>
+                <!-- End of gallery -->
+
+                <div class="loader"></div>
             </div>
-            <!-- End of gallery -->
-    
-            <div class="loader"></div>
-    
-        </div>
-        <!-- End of container -->
-    
-    </main>
-    <script>
-        function followBtnClick(btn){
-            let following_profile = '{{ profile.id }}'
-<<<<<<< HEAD
-=======
-            console.log(following_profile)
->>>>>>> 921a3ee (Created like, comment and follows functionality)
-            
-            $.ajax 
-            ({
-                url: `http://127.0.0.1:8000/profile/follow/${following_profile}/`,
-                type: 'POST',
-                success: function(result){
-<<<<<<< HEAD
-                    let followBtnText = result['btn_text']
-                    let followersCount = result['followers_count']
-                    $("#follow-btn").text(followBtnText)
-                    $("#followers-count").text(followersCount)
-=======
-                    console.log(result)
->>>>>>> 921a3ee (Created like, comment and follows functionality)
-                },
-            })
-        }
-    </script>
-</body>
+            <!-- End of container -->
+        </main>
+        <script>
+            function followBtnClick(btn) {
+                let following_profile = "{{ profile.id }}";
+                console.log(following_profile);
+                $.ajax({
+                    url: `http://127.0.0.1:8000/profile/follow/${following_profile}/`,
+                    type: "POST",
+                    success: function (result) {
+                        let followBtnText = result["btn_text"];
+                        let followersCount = result["followers_count"];
+                        $("#follow-btn").text(followBtnText);
+                        $("#followers-count").text(followersCount);
+                        console.log(result);
+                    },
+                });
+            }
+        </script>
+    </body>
 </html>

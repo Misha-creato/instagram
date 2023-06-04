@@ -1,22 +1,22 @@
-<<<<<<< HEAD
-import json
-from django.http import HttpResponse, JsonResponse
-=======
-from django.http import HttpResponse
->>>>>>> 921a3ee (Created like, comment and follows functionality)
-from django.shortcuts import redirect, render, get_object_or_404
+# Django
+from django.http import JsonResponse
+from django.shortcuts import (
+    get_object_or_404,
+    render
+)
 from django.urls import reverse
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
-from .forms import ProfileForm
-from .models import Profile, FollowerFollowing
-from django.views.decorators.csrf import csrf_exempt
-<<<<<<< HEAD
-from django.core.serializers.json import DjangoJSONEncoder
-=======
 
->>>>>>> 921a3ee (Created like, comment and follows functionality)
+# Local
+from .forms import ProfileForm
+from .models import (
+    FollowerFollowing,
+    Profile
+)
+
 
 class ProfileList(ListView):
     template_name = 'profile.html'
@@ -27,65 +27,81 @@ class ProfileList(ListView):
         profile_id = self.kwargs['pk']
         profile = Profile.objects.get(id=profile_id)
         followers = profile.followers.values_list('follower_id', flat=True)
-        context["profile"] = profile
+        context['profile'] = profile
         context['followers'] = followers
         return context
-    
+
 
 class ProfileUpdate(UpdateView):
     template_name = 'profile_change.html'
     form_class = ProfileForm
     model = Profile
-    
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["profile"] = Profile.objects.get(user=self.request.user)
+        context['profile'] = Profile.objects.get(user=self.request.user)
         return context
-    
+
     def get_success_url(self) -> str:
         profile_id = Profile.objects.get(user=self.request.user)
         return reverse('profile', kwargs={'pk': profile_id.pk})
-    
+
+
 @csrf_exempt
-def profile_follow(request, pk):
-<<<<<<< HEAD
+def profile_follow(request, pk) -> JsonResponse:
     if request.method == 'POST':
         following_profile = get_object_or_404(Profile, pk=pk)
         follower_profile = request.user.profile
-        follower_following = FollowerFollowing.objects.filter(following=following_profile, follower=follower_profile)
-        btn_text = 'Follow' 
+        follower_following = \
+            FollowerFollowing.objects.filter(
+                following=following_profile,
+                follower=follower_profile
+            )
+
+        btn_text = 'Follow'
         if follower_following:
             follower_following.delete()
         else:
-            FollowerFollowing.objects.create(following=following_profile, follower=follower_profile)
+            FollowerFollowing.objects.create(
+                following=following_profile,
+                follower=follower_profile
+            )
             btn_text = 'Unfollow'
-        followers_count = following_profile.followers.count()
-        return JsonResponse({
-            'btn_text': btn_text, 
-            'followers_count': followers_count
-            })
+
+        followers_count: int = following_profile.followers.count()
+
+        return JsonResponse(
+            {
+                'btn_text': btn_text,
+                'followers_count': followers_count
+            }
+        )
 
 
 class ProfileSearchView(View):
     def get(self, request):
         query = request.GET.get('q')
-        profiles = Profile.objects.filter(username__icontains=query)
-        return render(request, 'profile_search.html', {'profiles': profiles, 'query': query})
-    
-    
+        profiles = Profile.objects.filter(
+            username__icontains=query
+        )
+        return render(
+            request,
+            'profile_search.html',
+            {
+                'profiles': profiles,
+                'query': query
+            }
+        )
+
+
 def search_user(request):
     query = request.GET.get('query')
-    profiles = Profile.objects.filter(username__icontains=query)
+    profiles = Profile.objects.filter(
+        username__icontains=query
+    )
     profiles = list(profiles.values())
-    return JsonResponse({'profiles': profiles})
-=======
-    following_profile = get_object_or_404(Profile, pk=pk)
-    follower_profile = request.user.profile
-    follower_following = FollowerFollowing.objects.filter(following=following_profile, follower=follower_profile)
-    if follower_following:
-        follower_following.delete()
-    else:
-        FollowerFollowing.objects.create(following=following_profile, follower=follower_profile)
-    return HttpResponse('success')
->>>>>>> 921a3ee (Created like, comment and follows functionality)
+    return JsonResponse(
+        {
+            'profiles': profiles
+        }
+    )
